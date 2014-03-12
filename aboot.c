@@ -102,6 +102,7 @@ static void process_target(char *targetspec, struct flash_target *tgt)
 	if (!tgt->params) {
 		pr_error("Memory allocation failure");
 		die();
+		return;
 	}
 
 	if (no_params)

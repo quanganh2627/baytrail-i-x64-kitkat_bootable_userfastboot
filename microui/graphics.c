@@ -282,9 +282,19 @@ static void gr_init_font(void)
     unsigned char *in, data;
 
     gr_font = calloc(sizeof(*gr_font), 1);
+    if (NULL == gr_font) {
+        perror("gr_init_font: failed to allocate memory");
+        return;
+    }
+
     ftex = &gr_font->texture;
 
     bits = malloc(font.width * font.height);
+    if (NULL == bits) {
+        free(gr_font);
+        perror("gr_init_font: failed to allocate memory");
+        return;
+    }
 
     ftex->version = sizeof(*ftex);
     ftex->width = font.width;
