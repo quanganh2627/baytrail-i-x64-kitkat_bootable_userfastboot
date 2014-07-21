@@ -27,6 +27,8 @@
 #include <cutils/properties.h>
 #include <fs_mgr.h>
 
+#include <inttypes.h>
+#include "fastboot.h"
 #include "userfastboot_fstab.h"
 #include "userfastboot.h"
 #include "userfastboot_ui.h"
@@ -72,9 +74,54 @@ struct fstab_rec *volume_for_name(const char *name)
 {
 	char *pat;
 	struct fstab_rec *vol;
+	/* Historical: it's /data in recovery.fstab, but some fastboot
+	 * options (such as -w) expect it to be called userdata */
+	if (!strcmp("userdata", name))
+		name = "data";
 	/* recovery.fstab entries are all prefixed with '/' */
 	pat = xasprintf("/%s", name);
 	vol = volume_for_path(pat);
 	free(pat);
 	return vol;
+}
+static void publish_part_data(bool wait, struct fstab_rec *v, char *name)
+{
+	uint64_t size;
+	struct stat sb;
+	int ctr = 15;
+
+	/* Keep trying for ctr seconds for the device node to show up.
+	 * ueventd may be busy creating the node */
+	while (wait && ctr-- && stat(v->blk_device, &sb)) {
+		pr_debug("waiting for %s\n", v->blk_device);
+		sleep(1);
+	}
+
+
+	if (get_volume_size(v, &size)) {
+		if (wait)
+			pr_error("Couldn't get %s volume size\n",
+				xasprintf("partition-size:%s", name));
+		fastboot_publish(xasprintf("partition-size:%s", name),
+				xstrdup("0x0"));
+	} else {
+		fastboot_publish(xasprintf("partition-size:%s", name),
+				xasprintf("0x%" PRIx64, size));
+	}
+}
+
+void publish_all_part_data(bool wait, char * part)
+{
+	int i;
+	for (i = 0; i < fstab->num_entries; i++) {
+		struct fstab_rec *v = &fstab->recs[i];
+
+		if (!strcmp(part , v->mount_point))
+			{
+			if(!strcmp(part,"/data"))
+			publish_part_data(wait, v, "userdata");
+			else if(!strcmp(part,"/cache"))
+			publish_part_data(wait, v, "cache");
+			}
+	}
 }

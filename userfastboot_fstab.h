@@ -18,6 +18,7 @@
 #define USERFASTBOOT_FSTAB_H_
 
 #include <fs_mgr.h>
+#include <stdbool.h>
 // Load and parse volume data from /etc/recovery.fstab.
 void load_volume_table();
 
@@ -26,6 +27,10 @@ struct fstab_rec* volume_for_path(const char* path);
 
 // Return struct fstab_rec* record for named entry (minus the leading '/')
 struct fstab_rec *volume_for_name(const char *name);
+
+// publish data and cache partition types and sizes
+// if wait is true, wait for device nodes to show up
+void publish_all_part_data(bool wait,char * part);
 
 #endif
 

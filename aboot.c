@@ -480,9 +480,11 @@ void aboot_register_commands(void)
 	fastboot_publish("version-baseband", "unknown");
 	fastboot_publish("partition-type:system", "ext4");
 	fastboot_publish("partition-type:cache", "ext4");
-	fastboot_publish("partition-type:data", "ext4");
+	fastboot_publish("partition-type:userdata", "ext4");
 	publish_from_prop("serialno", "ro.serialno", "unknown");
 
+        publish_all_part_data(true, "/data");
+        publish_all_part_data(true, "/cache");
 	flash_cmds = hashmapCreate(8, strhash, strcompare);
 	oem_cmds = hashmapCreate(8, strhash, strcompare);
 	if (!flash_cmds || !oem_cmds) {

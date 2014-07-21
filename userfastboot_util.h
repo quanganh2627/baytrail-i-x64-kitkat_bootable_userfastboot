@@ -35,6 +35,7 @@ int mount_partition(struct fstab_rec *vol);
 int erase_partition(struct fstab_rec *vol);
 int check_ext_superblock(struct fstab_rec *vol, int *sb_present);
 int unmount_partition(struct fstab_rec *vol);
+int get_volume_size(struct fstab_rec *vol, uint64_t *sz);
 int ext4_filesystem_checks(struct fstab_rec *vol);
 
 #endif

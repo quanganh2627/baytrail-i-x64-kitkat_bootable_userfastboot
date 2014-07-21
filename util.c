@@ -264,7 +264,7 @@ int mount_partition_device(const char *device, const char *type, char *mountpoin
 }
 
 
-static int get_volume_size(struct fstab_rec *vol, uint64_t *sz)
+int get_volume_size(struct fstab_rec *vol, uint64_t *sz)
 {
 	int fd;
 	int ret = -1;
