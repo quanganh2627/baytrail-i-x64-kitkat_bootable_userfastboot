@@ -63,3 +63,10 @@ on property:ro.debuggable=1
 service pstore-clean /system/bin/pstore-clean
     oneshot
 
+service dhcpcd_eth0 /system/bin/dhcpcd -ABDKL
+    class main
+    disabled
+    oneshot
+
+on device-added-/dev/eth0
+    start dhcpcd_eth0
