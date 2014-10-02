@@ -86,7 +86,7 @@ $(USERFASTBOOT_RAMDISK): \
 	$(hide) mkdir -p $(USERFASTBOOT_ROOT_OUT)
 	$(hide) mkdir -p $(USERFASTBOOT_ROOT_OUT)/sbin
 	$(hide) $(ACP) -f $(ufb_bin) $(USERFASTBOOT_ROOT_OUT)/sbin/userfastboot
-	$(hide) $(ACP) -f $(efibootmgr) $(USERFASTBOOT_ROOT_OUT)/sbin/efibootmgr
+	$(hide) touch $(USERFASTBOOT_ROOT_OUT)/sbin/efibootmgr
 	$(hide) mkdir -p $(USERFASTBOOT_ROOT_OUT)/data
 	$(hide) mkdir -p $(USERFASTBOOT_ROOT_OUT)/mnt
 	$(hide) mkdir -p $(ufb_system_out)
