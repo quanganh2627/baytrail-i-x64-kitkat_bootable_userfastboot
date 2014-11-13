@@ -76,6 +76,7 @@ service dhcpcd_eth0 /system/bin/dhcpcd -ABDKL
     class main
     disabled
     oneshot
+    seclabel u:r:dhcpcd:s0
 
 on device-added-/dev/eth0
     start dhcpcd_eth0
